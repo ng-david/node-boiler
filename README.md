@@ -14,7 +14,9 @@
 
 Production: `npm start`
 
+
 Development (watch for changes): `npm run watch`
+
 Development (watch for SCSS): `npm run watch-css`
 
 ### TODO
