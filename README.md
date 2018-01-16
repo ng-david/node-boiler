@@ -1,4 +1,4 @@
-# A Simple Node.JS Boilerplate
+# Chinglish V2
 
 ### What's included?
 
@@ -13,7 +13,6 @@
 ### Running
 
 Production: `npm start`
-
 
 Development (watch for changes): `npm run watch`
 

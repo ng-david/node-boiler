@@ -1,0 +1,26 @@
+{
+  "name": "Chinglish",
+  "version": "0.0.8",
+  "description": "A Socket.io powered webapp",
+  "dependencies": {
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0",
+    "google-translate-api": "^2.3.0",
+    "handlebars": "^4.0.10",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "node-sass": "^4.5.3",
+    "nodemon": "^1.11.0",
+    "rimraf": "^2.6.1"
+  },
+  "scripts": {
+    "serve": "nodemon -e js,html,handlebars src/ --exec babel-node",
+    "build": "rimraf build/ && babel src/ --out-dir build/ --ignore ./scss --copy-files",
+    "start": "node build/index.js",
+    "watch-css": "node-sass -w src/scss/main.scss src/public/css/main.css"
+  }
+}

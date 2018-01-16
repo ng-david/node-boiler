@@ -1,0 +1,304 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
+html {
+  font-size: 62.5%; }
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: #000000;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  font-weight: 400;
+  max-height: 100vh; }
+
+button {
+  font-size: 1.6rem;
+  cursor: pointer; }
+
+h1, h2, h3, h4, h5, h6, p, li {
+  line-height: 1.5; }
+
+h1 {
+  font-weight: bold;
+  font-size: 3rem; }
+
+h2 {
+  font-size: 24px; }
+
+.zh-CN {
+  opacity: .6; }
+
+.form-control {
+  height: 4rem;
+  width: 100%;
+  padding: 2rem 1rem;
+  color: #000000;
+  border-radius: 4px;
+  border: 1px solid #e3e3e3;
+  margin-bottom: 2rem;
+  font-size: 1.6rem; }
+  .form-control:hover {
+    border-color: #ff3a3a; }
+  .form-control:active, .form-control:focus {
+    outline: none;
+    border-color: #e10000; }
+
+.btn-primary {
+  transition: ease all .1s;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 1.2rem 2.4rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #e10000; }
+  .btn-primary:focus, .btn-primary:active {
+    outline: none;
+    box-shadow: none; }
+  .btn-primary:hover {
+    background-color: #ff3a3a; }
+  .btn-primary:active {
+    background-color: #b80000; }
+  .btn-primary:focus {
+    background-color: #ff3a3a; }
+
+.login-modal {
+  width: 50rem;
+  max-width: 90%;
+  border-radius: 4px;
+  padding: 4rem;
+  border: 1px solid #e3e3e3;
+  position: absolute;
+  margin: 6rem auto;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: white; }
+  .login-modal .heading-logo {
+    width: 60px;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+    padding-bottom: 2rem; }
+  .login-modal .err {
+    display: none;
+    color: red; }
+  .login-modal .heading {
+    text-align: center;
+    margin-bottom: 4rem; }
+  .login-modal .name-section {
+    margin-bottom: 2rem; }
+  .login-modal .lang-section {
+    margin-bottom: 3rem; }
+    .login-modal .lang-section .lang-option {
+      cursor: pointer;
+      font-weight: 500;
+      margin-bottom: 1rem; }
+    .login-modal .lang-section input {
+      margin-right: 1rem; }
+  .login-modal .section-label {
+    display: block;
+    font-weight: bold;
+    color: #000000;
+    text-transform: uppercase;
+    margin-bottom: 1rem; }
+  .login-modal button {
+    width: 100%; }
+  @media (max-width: 767px) {
+    .login-modal {
+      padding: 2rem;
+      margin: 2rem auto; }
+      .login-modal .heading-logo {
+        width: 40px; }
+      .login-modal h1, .login-modal h2 {
+        font-size: 2rem; } }
+
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.6); }
+
+.logo {
+  font-weight: bold; }
+  .logo .zh-CN {
+    font-size: 1.6rem; }
+
+.sidebar {
+  overflow-y: scroll;
+  width: 260px;
+  height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #e3e3e3;
+  position: absolute;
+  left: 0;
+  top: 0; }
+  .sidebar .content h2 {
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e3e3e3; }
+  .sidebar .content h4 {
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 1rem; }
+  .sidebar .content ul {
+    list-style: none;
+    padding: 0; }
+  .sidebar .content .top {
+    padding: 2rem 2rem 0; }
+    .sidebar .content .top .sidebar-logo {
+      width: 40px;
+      margin: 0 auto;
+      margin-bottom: 2rem;
+      display: block; }
+    .sidebar .content .top .active-count {
+      float: right; }
+  .sidebar .content .user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem; }
+    .sidebar .content .user:hover {
+      background-color: #f7f7f7; }
+    .sidebar .content .user .name, .sidebar .content .user .main .msg-container .my-name, .main .msg-container .sidebar .content .user .my-name, .sidebar .content .user .main .msg-container .their-name, .main .msg-container .sidebar .content .user .their-name {
+      max-width: 170px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden; }
+      .sidebar .content .user .name:before, .sidebar .content .user .main .msg-container .my-name:before, .main .msg-container .sidebar .content .user .my-name:before, .sidebar .content .user .main .msg-container .their-name:before, .main .msg-container .sidebar .content .user .their-name:before {
+        content: '';
+        display: inline-block;
+        width: 1rem;
+        border-radius: 50%;
+        height: 1rem;
+        background-color: #3dd700;
+        margin-right: 5px; }
+    .sidebar .content .user .lang {
+      color: #808080; }
+  @media (max-width: 767px) {
+    .sidebar {
+      width: 100%;
+      left: auto;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      -webkit-transition: .1s ease;
+      -moz-transition: .1s ease;
+      -o-transition: .1s ease;
+      transition: .1s ease; }
+      .sidebar.mobile-show {
+        z-index: 1;
+        opacity: 1; }
+      .sidebar h2 {
+        display: none; }
+      .sidebar .active-count {
+        display: none; } }
+
+.main {
+  left: 260px;
+  width: calc(100% - 26rem);
+  height: 100vh;
+  position: relative;
+  display: block;
+  background-color: #f7f7f7; }
+  .main .msg-container {
+    list-style: none;
+    padding-left: 0;
+    height: calc(100% - 8.3rem);
+    overflow: auto;
+    padding: 2rem; }
+    .main .msg-container .name, .main .msg-container .my-name, .main .msg-container .their-name {
+      color: #333;
+      position: absolute; }
+    .main .msg-container .login-msg {
+      color: #808080;
+      text-align: center;
+      margin: 2rem auto; }
+    .main .msg-container .name, .main .msg-container .my-name, .main .msg-container .their-name {
+      position: relative;
+      margin-bottom: 0.5rem;
+      clear: both;
+      font-weight: bold; }
+    .main .msg-container .my-name {
+      float: right; }
+    .main .msg-container .their-name {
+      float: left; }
+    .main .msg-container .msg, .main .msg-container .their-msg, .main .msg-container .my-msg {
+      position: relative;
+      max-width: 70%;
+      margin-bottom: 0.25rem;
+      padding: 1.5rem;
+      border-radius: 4px;
+      clear: both;
+      border: 1px solid #e3e3e3; }
+    .main .msg-container .their-msg {
+      background-color: #ffffff;
+      float: left; }
+    .main .msg-container .my-msg {
+      background-color: #e10000;
+      color: #ffffff;
+      float: right; }
+  .main .input-section {
+    bottom: 0;
+    border-top: 1px solid #e3e3e3;
+    position: absolute;
+    background-color: #ffffff;
+    padding: 2rem;
+    width: 100%; }
+    .main .input-section .form-control {
+      margin-bottom: 0;
+      position: relative;
+      width: calc(100% - 40px); }
+    .main .input-section img {
+      height: 24px; }
+  .main .top-bar {
+    display: none; }
+  .main .btn-send {
+    position: absolute;
+    padding: 0 0 0 1rem;
+    right: 2rem;
+    height: 4.2rem;
+    bottom: 2rem;
+    outline: none;
+    border: none;
+    background-color: transparent; }
+    .main .btn-send:hover, .main .btn-send:focus {
+      opacity: .6; }
+    .main .btn-send:active {
+      opacity: 1; }
+  @media (max-width: 767px) {
+    .main {
+      width: 100%;
+      left: 0; }
+      .main .msg-container {
+        height: calc(100vh - 14.3rem); }
+      .main .top-bar {
+        color: #ffffff;
+        position: relative;
+        z-index: 2;
+        height: 6rem;
+        padding: 0rem 2rem;
+        background-color: white;
+        border-bottom: 1px solid #e3e3e3;
+        background-color: #e10000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between; }
+        .main .top-bar .btn-sidebar {
+          background-color: transparent;
+          border: none;
+          outline: none; }
+          .main .top-bar .btn-sidebar:active {
+            opacity: .6; }
+        .main .top-bar h2, .main .top-bar h4 {
+          font-weight: bold;
+          margin: 0; }
+        .main .top-bar img {
+          height: 20px;
+          display: inline; }
+        .main .top-bar h4 {
+          display: inline; }
+        .main .top-bar .active-count {
+          color: #ffffff; } }

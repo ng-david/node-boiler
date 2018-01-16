@@ -1,0 +1,26 @@
+{
+  "short_name": "Chinglish",
+  "name": "Chinglish",
+  "icons": [
+    {
+      "src": "img/launcher/chinglish-1x.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "img/launcher/chinglish-2x.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "img/launcher/chinglish-4x.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#b80000",
+  "background_color": "#ffffff",
+  "start_url": "./"
+}
