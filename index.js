@@ -58,20 +58,21 @@ app.get('/api/:room', (req, res) => {
 
 io.of('/chat').on('connection', function (client) {
 
-	client.on('adduser', function(username){
+	client.on('adduser', function(username, room){
+    console.log(room);
 		// store the username in the socket session for this client
 		client.username = username;
 		// store the room name in the socket session for this client
-		client.room = 'room1';
+		client.room = room;
 		// add the client's username to the global list
 		usernames[username] = username;
 		// send client to room 1
-		client.join('room1');
+		client.join(room);
 		// echo to client they've connected
-		client.emit('updatechat', 'SERVER', 'you have connected to room1');
+		client.emit('updatechat', 'SERVER', `you have connected to ${room}`);
 		// echo to room 1 that a person has connected to their room
-		client.broadcast.to('room1').emit('updatechat', 'SERVER', username + ' has connected to this room');
-		client.emit('updaterooms', rooms, 'room1');
+		client.broadcast.to(room).emit('updatechat', 'SERVER', username + ' has connected to this room');
+		client.emit('updaterooms', room);
 	});
 
 	client.on('sendchat', function(data) {
@@ -99,7 +100,8 @@ io.of('/chat').on('connection', function (client) {
 		// update list of users in chat, client-side
 		io.of('/chat').emit('updateusers', usernames);
 		// echo globally that this client has left
-		client.broadcast.emit('updatechat', 'SERVER', client.username + ' has disconnected');
+
+    io.of('/chat').in(client.room).emit('updatechat', 'SERVER', client.username + ' has disconnected');
 		client.leave(client.room);
 	});
 });
