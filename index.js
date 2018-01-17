@@ -4,6 +4,8 @@ const logger = require('morgan');
 const exphbs = require('express-handlebars');
 const _ = require('underscore');
 const translate = require('google-translate-api');
+const fs = require('fs');
+const path = require("path");
 
 const app = express();
 const server = require('http').Server(app);
@@ -23,6 +25,12 @@ app.use(function(req, res, next) {
   next();
 });
 
+// Read available rooms from local rooms.json file
+// This will have the latest backup of the available rooms
+const roomsFile = 'rooms.json';
+const rawdata = fs.readFileSync(path.join(__dirname, roomsFile));
+const rooms = JSON.parse(rawdata);
+
 // Initial GET
 // app.get('/', function(req, res) {
 //   res.render('home');
@@ -35,18 +43,24 @@ app.use(function(req, res, next) {
 // usernames which are currently connected to the chat
 var usernames = {};
 
-// rooms which are currently available in chat
-var rooms = {
-  room1: {
-    users: ['room1 GOD']
-  },
-  room2: {
-    users: []
-  },
-  room3: {
-    users: []
-  }
-}
+//
+// var rooms = {
+//   room1: {
+//     users: ['room1 GOD'],
+//     langs: ['en', 'en'],
+//     password: ''
+//   },
+//   room2: {
+//     users: [],
+//     langs: ['en', 'en'],
+//     password: ''
+//   },
+//   room3: {
+//     users: [],
+//     langs: ['en', 'en'],
+//     password: ''
+//   }
+// }
 
 app.get('/', (req, res) => {
   res.send({ response: "Server is alive" }).status(200);
@@ -59,8 +73,25 @@ app.get('/api/:room', (req, res) => {
   } else {
     return res.status(200).send("Room found");
   }
-
 });
+
+app.post('/api/create', (req, res) => {
+  const room = req.body.room;
+  console.log(req.body);
+  try {
+    rooms[room] = {
+      users: [],
+      langs: ['en', 'en'],
+      password: ''
+    }
+    // Backup room to file
+    backupToRoomsFile(() => {
+      return res.status(200).send("Room created");
+    });
+  } catch(err) {
+    return res.status(500).send("Server failed to make");
+  }
+})
 
 io.of('/chat').on('connection', function (client) {
 
@@ -71,6 +102,7 @@ io.of('/chat').on('connection', function (client) {
       // store data in socket session for this client
       client.username = username;
       client.room = room;
+
       // add the client's username to the room
       rooms[room].users.push(username);
 
@@ -111,14 +143,28 @@ io.of('/chat').on('connection', function (client) {
       // remove the username from room's users list
       const currentRoomUsers = rooms[client.room].users;
       currentRoomUsers.splice(currentRoomUsers.indexOf(client.username), 1);
-      // update list of users in chat, client-side
-      io.of('/chat').in(client.room).emit('updateusers', currentRoomUsers);
-      // echo to room that this client has left
-      io.of('/chat').in(client.room).emit('updatechat', 'SERVER', client.username + ' has disconnected');
-      client.leave(client.room);
+
+      // If no more users in room, kill it
+      // TODO make this countdown five minutes!
+      if (currentRoomUsers.length === 0) {
+        delete rooms[client.room];
+        backupToRoomsFile(() => {}); // no need for callback, just async update file
+      // If still users in room
+      } else {
+        // update list of users in chat, client-side
+        io.of('/chat').in(client.room).emit('updateusers', currentRoomUsers);
+        // echo to room that this client has left
+        io.of('/chat').in(client.room).emit('updatechat', 'SERVER', client.username + ' has disconnected');
+        client.leave(client.room);
+      }
     }
 	});
 });
+
+// Backup rooms to file
+function backupToRoomsFile(callback) {
+  fs.writeFile(roomsFile, JSON.stringify(rooms), 'utf8', callback);
+}
 
 server.listen(8000, () => {
   console.log('Listening on *:8000');

@@ -1,0 +1,17 @@
+{
+  "room1": {
+    "users": ["room1 GOD"],
+    "langs": ["en", "en"],
+    "password": ""
+  },
+  "room2": {
+    "users": [],
+    "langs": ["en", "en"],
+    "password": ""
+  },
+  "room3": {
+    "users": [],
+    "langs": ["en", "en"],
+    "password": ""
+  }
+}
