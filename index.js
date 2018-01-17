@@ -109,9 +109,9 @@ io.of('/chat').on('connection', function (client) {
       // send client to specified room
       client.join(room);
       // echo to client they've connected
-      client.emit('updatechat', 'SERVER', `you have connected to ${room}`);
+      client.emit('updatechat', 'SERVER', `you have connected to ${room}`, 'time not shared for now');
       // echo to room that a person has connected to their room
-      client.broadcast.to(room).emit('updatechat', 'SERVER', username + ' has connected to this room');
+      client.broadcast.to(room).emit('updatechat', 'SERVER', username + ' has connected to this room', 'time not shared for now');
       // Update rooms
       client.emit('updaterooms', room);
       // Update users
@@ -119,9 +119,9 @@ io.of('/chat').on('connection', function (client) {
     }
 	});
 
-	client.on('sendchat', function(data) {
+	client.on('sendchat', function(msg, time) {
 		// we tell the client to execute 'updatechat' with 2 parameters
-		io.of('/chat').in(client.room).emit('updatechat', client.username, data);
+		io.of('/chat').in(client.room).emit('updatechat', client.username, msg, time);
 	});
 
 	// client.on('switchRoom', function(newroom){
