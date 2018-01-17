@@ -37,9 +37,15 @@ var usernames = {};
 
 // rooms which are currently available in chat
 var rooms = {
-  room1: "room1",
-  room2: "room2",
-  room3: "room3"
+  room1: {
+    users: ['room1 GOD']
+  },
+  room2: {
+    users: []
+  },
+  room3: {
+    users: []
+  }
 }
 
 app.get('/', (req, res) => {
@@ -59,20 +65,26 @@ app.get('/api/:room', (req, res) => {
 io.of('/chat').on('connection', function (client) {
 
 	client.on('adduser', function(username, room){
-    console.log(room);
-		// store the username in the socket session for this client
-		client.username = username;
-		// store the room name in the socket session for this client
-		client.room = room;
-		// add the client's username to the global list
-		usernames[username] = username;
-		// send client to room 1
-		client.join(room);
-		// echo to client they've connected
-		client.emit('updatechat', 'SERVER', `you have connected to ${room}`);
-		// echo to room 1 that a person has connected to their room
-		client.broadcast.to(room).emit('updatechat', 'SERVER', username + ' has connected to this room');
-		client.emit('updaterooms', room);
+    if (username !== null && room !== null) {
+      console.log(`[SOCKET.IO]: New user ${username} connected to room ${room}`);
+
+      // store data in socket session for this client
+      client.username = username;
+      client.room = room;
+      // add the client's username to the room
+      rooms[room].users.push(username);
+
+      // send client to specified room
+      client.join(room);
+      // echo to client they've connected
+      client.emit('updatechat', 'SERVER', `you have connected to ${room}`);
+      // echo to room that a person has connected to their room
+      client.broadcast.to(room).emit('updatechat', 'SERVER', username + ' has connected to this room');
+      // Update rooms
+      client.emit('updaterooms', room);
+      // Update users
+      io.of('/chat').in(client.room).emit('updateusers', rooms[client.room].users);
+    }
 	});
 
 	client.on('sendchat', function(data) {
@@ -80,29 +92,31 @@ io.of('/chat').on('connection', function (client) {
 		io.of('/chat').in(client.room).emit('updatechat', client.username, data);
 	});
 
-	client.on('switchRoom', function(newroom){
-		// leave the current room (stored in session)
-		client.leave(client.room);
-		// join new room, received as function parameter
-		client.join(newroom);
-		client.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
-		// sent message to OLD room
-		client.broadcast.to(client.room).emit('updatechat', 'SERVER', client.username+' has left this room');
-		// update socket session room title
-		client.room = newroom;
-		client.broadcast.to(newroom).emit('updatechat', 'SERVER', client.username+' has joined this room');
-		client.emit('updaterooms', rooms, newroom);
-	});
+	// client.on('switchRoom', function(newroom){
+	// 	// leave the current room (stored in session)
+	// 	client.leave(client.room);
+	// 	// join new room, received as function parameter
+	// 	client.join(newroom);
+	// 	client.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
+	// 	// sent message to OLD room
+	// 	client.broadcast.to(client.room).emit('updatechat', 'SERVER', client.username+' has left this room');
+	// 	// update socket session room title
+	// 	client.room = newroom;
+	// 	client.broadcast.to(newroom).emit('updatechat', 'SERVER', client.username+' has joined this room');
+	// 	client.emit('updaterooms', rooms, newroom);
+	// });
 
 	client.on('disconnect', function(){
-		// remove the username from global usernames list
-		delete usernames[client.username];
-		// update list of users in chat, client-side
-		io.of('/chat').emit('updateusers', usernames);
-		// echo globally that this client has left
-
-    io.of('/chat').in(client.room).emit('updatechat', 'SERVER', client.username + ' has disconnected');
-		client.leave(client.room);
+    if (client.room && client.username) {
+      // remove the username from room's users list
+      const currentRoomUsers = rooms[client.room].users;
+      currentRoomUsers.splice(currentRoomUsers.indexOf(client.username), 1);
+      // update list of users in chat, client-side
+      io.of('/chat').in(client.room).emit('updateusers', currentRoomUsers);
+      // echo to room that this client has left
+      io.of('/chat').in(client.room).emit('updatechat', 'SERVER', client.username + ' has disconnected');
+      client.leave(client.room);
+    }
 	});
 });
 
