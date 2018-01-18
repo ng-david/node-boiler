@@ -78,18 +78,31 @@ app.get('/api/:room', (req, res) => {
 
 app.post('/api/create', (req, res) => {
   const room = req.body.room;
-  console.log(req.body);
+  const date = new Date(req.body.date);
   try {
+    // Add five hours to date
+    console.log("------------" + typeof date);
+    const expireDate = new Date (date.setMinutes(date.getMinutes() + 2));
     rooms[room] = {
       users: [],
       langs: ['en', 'en'],
-      password: ''
+      password: '',
+      expireDate: expireDate.toLocaleString()
     }
+
+    // Delete this room when the timeout expires for this room,
+    // Then backup to file
+    setTimeout(() => {
+      delete rooms[room];
+      backupToRoomsFile(() => {}); // no need for callback, just async update file
+    }, 60000);
+
     // Backup room to file
     backupToRoomsFile(() => {
       return res.status(200).send("Room created");
     });
   } catch(err) {
+    console.log("ERROR: " + err);
     return res.status(500).send("Server failed to make");
   }
 })
@@ -111,6 +124,12 @@ io.of('/chat').on('connection', function (client) {
       client.join(room);
       // echo to client they've connected
       client.emit('updatechat', 'SERVER', `you have connected to ${room}`, 'time not shared for now');
+
+      // TODO tells clients when this room will expire
+      if (rooms[room].expireDate) {
+        client.emit('updatechat', 'SERVER', `This room will expire at ${rooms[room].expireDate}`, 'time not shared for now');
+      }
+
       // echo to room that a person has connected to their room
       client.broadcast.to(room).emit('updatechat', 'SERVER', username + ' has connected to this room', 'time not shared for now');
       // Update rooms
