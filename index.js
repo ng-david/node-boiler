@@ -68,10 +68,11 @@ app.get('/', (req, res) => {
 
 app.get('/api/:room', (req, res) => {
   const room = req.params.room;
-  if (!rooms[room]) {
-    return res.status(404).send("Room not found");
-  } else {
+  // Ensure given room is a string
+  if ((typeof room === 'string' || room instanceof String) && rooms[room]) {
     return res.status(200).send("Room found");
+  } else {
+    return res.status(404).send("Room not found");
   }
 });
 
